@@ -2,6 +2,8 @@ import pyttsx3
 import speech_recognition as sr
 import eel
 import time
+import re
+
 def speak(text):
     text = str(text)
     engine = pyttsx3.init('sapi5')
@@ -50,8 +52,64 @@ def allCommands(message=1):
         query = message
         eel.senderText(query)
     try:
-
-        if "open" in query:
+        # Weather feature
+        if re.search(r"weather in (.+)", query):
+            from engine.features import get_weather
+            city = re.search(r"weather in (.+)", query).group(1)
+            get_weather(city)
+        elif re.search(r"what's the weather in (.+)", query):
+            from engine.features import get_weather
+            city = re.search(r"what's the weather in (.+)", query).group(1)
+            get_weather(city)
+        # Flexible reminder recognition
+        elif re.search(r"remind me to (.+) at (.+)", query):
+            from engine.features import schedule_reminder, parse_time_from_string
+            match = re.search(r"remind me to (.+) at (.+)", query)
+            message = match.group(1)
+            time_str = match.group(2)
+            reminder_time = parse_time_from_string(time_str)
+            if reminder_time:
+                schedule_reminder(reminder_time, message)
+            else:
+                speak("Sorry, I couldn't understand the time for your reminder.")
+        elif re.search(r"remind me to (.+)", query):
+            from engine.features import schedule_reminder, parse_time_from_string
+            message = re.search(r"remind me to (.+)", query).group(1)
+            speak("At what time should I remind you?")
+            time_str = takecommand()
+            reminder_time = parse_time_from_string(time_str)
+            if reminder_time:
+                schedule_reminder(reminder_time, message)
+            else:
+                speak("Sorry, I couldn't understand the time for your reminder.")
+        elif re.search(r"set (a )?reminder at (.+) to (.+)", query):
+            from engine.features import schedule_reminder, parse_time_from_string
+            match = re.search(r"set (a )?reminder at (.+) to (.+)", query)
+            time_str = match.group(2)
+            message = match.group(3)
+            reminder_time = parse_time_from_string(time_str)
+            if reminder_time:
+                schedule_reminder(reminder_time, message)
+            else:
+                speak("Sorry, I couldn't understand the time for your reminder.")
+        # Flexible alarm recognition
+        elif re.search(r"set (an )?alarm for (.+)", query):
+            from engine.features import schedule_alarm, parse_time_from_string
+            time_str = re.search(r"set (an )?alarm for (.+)", query).group(2)
+            alarm_time = parse_time_from_string(time_str)
+            if alarm_time:
+                schedule_alarm(alarm_time, "")
+            else:
+                speak("Sorry, I couldn't understand the time for your alarm.")
+        elif re.search(r"alarm at (.+)", query):
+            from engine.features import schedule_alarm, parse_time_from_string
+            time_str = re.search(r"alarm at (.+)", query).group(1)
+            alarm_time = parse_time_from_string(time_str)
+            if alarm_time:
+                schedule_alarm(alarm_time, "")
+            else:
+                speak("Sorry, I couldn't understand the time for your alarm.")
+        elif "open" in query:
             from engine.features import openCommand
             openCommand(query)
         elif "on youtube" in query:

@@ -1,7 +1,7 @@
 import csv
 import sqlite3
 
-con = sqlite3.connect("jarvis.db")
+con = sqlite3.connect("ziggy.db")
 cursor = con.cursor()
 
 query = "CREATE TABLE IF NOT EXISTS sys_command(id integer primary key, name VARCHAR(100), path VARCHAR(1000))"
@@ -54,3 +54,28 @@ cursor.execute(query)
 # cursor.execute("SELECT mobile_no FROM contacts WHERE LOWER(name) LIKE ? OR LOWER(name) LIKE ?", ('%' + query + '%', query + '%'))
 # results = cursor.fetchall()
 # print(results[0][0])
+
+def add_sys_command(name, path):
+    con = sqlite3.connect("ziggy.db")
+    cursor = con.cursor()
+    cursor.execute("INSERT INTO sys_command (name, path) VALUES (?, ?)", (name.lower(), path))
+    con.commit()
+    con.close()
+    print(f"Added sys_command: {name} -> {path}")
+
+def add_web_command(name, url):
+    con = sqlite3.connect("ziggy.db")
+    cursor = con.cursor()
+    cursor.execute("INSERT INTO web_command (name, url) VALUES (?, ?)", (name.lower(), url))
+    con.commit()
+    con.close()
+    print(f"Added web_command: {name} -> {url}")
+
+if __name__ == "__main__":
+    add_sys_command('vs code', r'C:\Users\DELL\AppData\Local\Programs\Microsoft VS Code\Code.exe')
+    add_sys_command('chrome', r'C:\Program Files\Google\Chrome\Application\chrome.exe')
+    add_sys_command('notepad', r'C:\Windows\System32\notepad.exe')
+    add_web_command('github', 'https://github.com')
+    add_web_command('google', 'https://www.google.com')
+    add_web_command('youtube', 'https://www.youtube.com')
+    print('Common commands added!')
