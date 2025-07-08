@@ -75,6 +75,44 @@ Ziggy uses facial recognition for secure access. To set up authentication:
 
 Once configured, Ziggy will recognize your face when you start the application.
 
+## Conda Environment Setup (Recommended)
+
+1. **Create a new conda environment named `ziggy` (Python 3.12):**
+   ```sh
+   conda create -n ziggy python=3.12
+   ```
+2. **Activate the environment:**
+   ```sh
+   conda activate ziggy
+   ```
+3. **Install dependencies:**
+   ```sh
+   conda install pip
+   pip install -r requirements.txt
+   # Or, if you don't have requirements.txt:
+   pip install eel playsound pyaudio pyautogui pywhatkit pvporcupine hugchat opencv-contrib-python pillow SpeechRecognition pyttsx3 requests pygame
+   ```
+4. **Run the assistant:**
+   ```sh
+   python run.py
+   ```
+5. **Deactivate when done:**
+   ```sh
+   conda deactivate
+   ```
+
+---
+
+## Enhanced App & Website Opening
+
+- You can now say things like:
+  - "Open Chrome", "Open Brave", "Open Notepad", "Open Calculator"
+  - "Open YouTube", "Open GitHub", "Open Facebook", "Open Gmail"
+  - "Open [any .com/.org/.net site]"
+  - If not found, the assistant will search Google for you.
+
+---
+
 ## Project Structure
 
 ```
